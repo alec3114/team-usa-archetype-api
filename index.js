@@ -119,6 +119,9 @@ function rateLimit(req, res, next) {
 
 app.post("/archetype", rateLimit, async (req, res) => {
   const { height, weight, age, strengths, sports_history, mental_strengths, mental_weaknesses } = req.body;
+  if (!height || !weight || !age) {
+  return res.status(400).json({ error: "Missing required fields" });
+}
 
   const prompt = `
     You are a Team USA sports analyst with access to 120 years of Olympic and Paralympic historical data.
