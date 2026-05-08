@@ -1,12 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { VertexAI } = require("@google-cloud/vertexai");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const vertexAI = new VertexAI({project: 'my-first-project', location: 'us-central1'});
 
 // All 42 combo names
 const COMBO_NAMES = {
@@ -181,9 +181,9 @@ app.post("/archetype", rateLimit, async (req, res) => {
   `;
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" }); 
+    const model = vertexAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const text = result.response.candidates[0].content.parts[0].text;
     const clean = text.replace(/```json|```/g, "").trim();
     const parsed = JSON.parse(clean);
 
