@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const vertexAI = new VertexAI({project: 'my-first-project', location: 'us-central1'});
+const vertexAI = new VertexAI({project: 'team-usa-pathfinder', location: 'us-central1'});
 
 // All 42 combo names
 const COMBO_NAMES = {
