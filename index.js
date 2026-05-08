@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // All 42 combo names
 const COMBO_NAMES = {
@@ -181,13 +181,11 @@ app.post("/archetype", rateLimit, async (req, res) => {
   `;
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const response = await ai.models.generateContent({ model: "gemini-2.5-flash", contents: prompt });
+    const text = response.text;
     const clean = text.replace(/```json|```/g, "").trim();
     const parsed = JSON.parse(clean);
 
-    // Look up the combo name
     const comboName = COMBO_NAMES[parsed.physical_archetype]?.[parsed.primary_mental_archetype] || 
       `${parsed.physical_archetype} ${parsed.primary_mental_archetype}`;
     
