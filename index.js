@@ -120,8 +120,8 @@ function rateLimit(req, res, next) {
 app.post("/archetype", rateLimit, async (req, res) => {
   const { height, weight, age, strengths, sports_history, mental_strengths, mental_weaknesses } = req.body;
   if (!height || !weight || !age) {
-  return res.status(400).json({ error: "Missing required fields" });
-}
+    return res.status(400).json({ error: "Missing required fields" });
+  }
 
   const prompt = `
     You are a Team USA sports analyst with access to 120 years of Olympic and Paralympic historical data.
@@ -169,7 +169,7 @@ app.post("/archetype", rateLimit, async (req, res) => {
       "mental_description": "[2 sentences about their mental profile combining both archetypes]",
       "top_sports": ["sport1", "sport2", "sport3"],
       "paralympic_sports": ["sport1", "sport2"],
-      "historical_olympics": "[which Olympics era they would have peaked at and why - use conditional language]",
+      "historical_olympics": "[which Team USA Games era they would have peaked at and why - use conditional language]",
       "synergy_archetypes": ["physical archetype they pair well with", "mental archetype they synergize with"],
       "tagline": "[one badass sentence that captures their full identity as a Team USA athlete]"
     }
@@ -181,6 +181,9 @@ app.post("/archetype", rateLimit, async (req, res) => {
     - Never reference specific real athletes by name
     - Return only valid JSON, no extra text
     - Use EXACT archetype names from the lists above
+    - Never use the term "Olympics" alone — always say "Team USA Olympic and Paralympic Games"
+    - Never reference specific athlete names under any circumstances
+    - Never mention finish times, race times, or specific scoring results
   `;
 
   try {
